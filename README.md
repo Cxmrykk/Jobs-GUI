@@ -9,7 +9,7 @@ git clone https://github.com/Cxmrykk/Seek-GUI.git
 cd Seek-GUI
 
 # Setup virtual environment
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 
 # Install Python dependencies
