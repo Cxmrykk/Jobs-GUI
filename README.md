@@ -19,7 +19,7 @@ pip install selenium
 python -m scraper
 ```
 
-### Getting a URL
-- Visit [Seek.com.au](https://seek.com.au/) and create a job search query
-- Copy the browser URL after the page has loaded
-- Paste into the "URL" field and click "Search"
+### Usage
+1. Visit [Seek.com.au](https://seek.com.au/) in your broser and create a job search query
+2. Copy the browser URL after the page has loaded
+3. Open the GUI, paste into the "URL" field and click "Search"
