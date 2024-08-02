@@ -32,6 +32,17 @@ url_var = tk.StringVar()
 url_entry = tk.Entry(url_frame, textvariable=url_var)
 url_entry.pack(fill=tk.X, expand=True)
 
+# Create a frame for page number entry
+page_frame = tk.Frame(root)
+page_frame.pack(fill=tk.X, padx=5, pady=5)
+
+# Create a label and entry field for page number
+page_label = tk.Label(page_frame, text="Number of Pages:")
+page_label.pack(side=tk.LEFT)
+page_var = tk.StringVar(value="30")  # Default value is 30
+page_entry = tk.Entry(page_frame, textvariable=page_var)
+page_entry.pack(fill=tk.X, expand=True)
+
 # Create a "Search" button
 search_button = tk.Button(root, text="Search", command=lambda: threading.Thread(target=fetch_jobs).start())
 search_button.pack(fill=tk.X, padx=5, pady=5)
@@ -50,11 +61,18 @@ def fetch_jobs():
     # Get the URL from the URL entry field
     url = url_var.get()
 
+    # Get the number of pages from the page entry field
+    try:
+        num_pages = int(page_var.get())
+    except ValueError:
+        status_var.set("Invalid number of pages.")
+        return
+
     # Create a new instance of the Chrome driver
     driver = webdriver.Chrome(options=options)
 
     # Iterate over the pages
-    for page in range(1, 11):
+    for page in range(1, num_pages + 1):
         # Update the status bar
         status_var.set(f"Fetching jobs from page {page}...")
 
