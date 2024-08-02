@@ -4,18 +4,18 @@
 
 ### Setup
 ```sh
-# Clone source code
+# Clone the project
 git clone https://github.com/Cxmrykk/Seek-GUI.git
 cd Seek-GUI
 
-# Setup virtual environment
+# Setup and enter Python virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
 # Install Python dependencies
 pip install selenium
 
-# Execute the program
+# Run the GUI
 python -m scraper
 ```
 
