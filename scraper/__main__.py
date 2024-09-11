@@ -71,57 +71,63 @@ def fetch_jobs():
     # Create a new instance of the Chrome driver
     driver = webdriver.Chrome(options=options)
 
-    # Iterate over the pages
-    for page in range(1, num_pages + 1):
-        # Update the status bar
-        status_var.set(f"Fetching jobs from page {page}...")
+    try:
+        # Iterate over the pages
+        for page in range(1, num_pages + 1):
+            # Update the status bar
+            status_var.set(f"Fetching jobs from page {page}...")
 
-        # Go to the Seek page
-        driver.get(f'{url}&page={page}')
+            # Go to the Seek page
+            driver.get(f'{url}&page={page}')
 
-        # Get the source of the page
-        html = driver.page_source
+            # Get the source of the page
+            html = driver.page_source
 
-        # Find the first text that matches the pattern
-        pattern = re.compile('window\\.SEEK_REDUX_DATA = (\\{[^\\n]+\\});\\n')
-        match = pattern.search(html)
+            # Find the first text that matches the pattern
+            pattern = re.compile('window\\.SEEK_REDUX_DATA = (\\{[^\\n]+\\});\\n')
+            match = pattern.search(html)
 
-        if match:
-            # Replace 'undefined' with 'null'
-            json_text = re.sub('"(.*?)"\\s*:\\s*undefined', '"\\1": null', match.group(1))
+            if match:
+                # Replace 'undefined' with 'null'
+                json_text = re.sub('"(.*?)"\\s*:\\s*undefined', '"\\1": null', match.group(1))
 
-            # Convert the JSON text to a Python dictionary
-            data = json.loads(json_text.strip())
+                # Convert the JSON text to a Python dictionary
+                data = json.loads(json_text.strip())
 
-            # Iterate over the jobs
-            for job in data["results"]["results"]["jobs"]:
-                # Add the job to the dictionary
-                jobs[job['id']] = job
+                # Iterate over the jobs
+                for job in data["results"]["results"]["jobs"]:
+                    # Add the job to the dictionary
+                    jobs[job['id']] = job
 
-                # Calculate the difference in time from the listing date to now
-                listing_date = datetime.strptime(job['listingDate'], "%Y-%m-%dT%H:%M:%SZ")
-                now = datetime.now()
-                time_difference = now - listing_date
+                    # Calculate the difference in time from the listing date to now
+                    listing_date = datetime.strptime(job['listingDate'], "%Y-%m-%dT%H:%M:%SZ")
+                    now = datetime.now()
+                    time_difference = now - listing_date
 
-                # Add the job to the tree view
-                try:
-                    location = job['suburb']
-                except:
-                    location = job['area']
+                    # Add the job to the tree view
+                    try:
+                        location = job['suburb']
+                    except:
+                        location = job['area']
 
-                tree.insert('', 'end', values=(job['title'], job['advertiser']['description'], job['workType'], location, f"{time_difference.days} Days Ago"))
+                    tree.insert('', 'end', values=(job['title'], job['advertiser']['description'], job['workType'], location, f"{time_difference.days} Days Ago"))
 
-                # Sort the tree view by date posted
-                sort_tree_date('Listed')
+                    # Sort the tree view by date posted
+                    sort_tree_date('Listed')
 
-        # Update the GUI
-        root.update_idletasks()
+            # Update the GUI
+            root.update_idletasks()
+
+            # Update the status bar
+            status_var.set("Finished fetching jobs.")
+
+    # Gracefully catch any errors and display message
+    except:
+        status_var.set("Couldn't fetch any more jobs (Error)")
 
     # Close the browser
-    driver.quit()
-
-    # Update the status bar
-    status_var.set("Finished fetching jobs.")
+    finally:
+        driver.quit()
 
 # Create a tree view
 tree = ttk.Treeview(root, columns=('Title', 'Company', 'Work Type', 'Location', 'Listed'))
