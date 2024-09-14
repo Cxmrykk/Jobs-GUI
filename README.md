@@ -27,8 +27,8 @@ python -m scraper
 ```
 
 ### Usage
-1. Visit [Seek.com.au](https://seek.com.au/) and/or [AU.indeed.com](https://au.indeed.com) in your broser and create a job search query
-2. Copy the browser URL after searching for your query
-3. Open the GUI, paste into the "URL" field and click "Search"
+1. Visit [seek.com.au](https://seek.com.au/) or [au.indeed.com](https://au.indeed.com) in your browser and create a job search query
+2. Copy the browser URL(s) after searching for your query
+3. Open the GUI, paste contents into the "URL" field and click "Search"
 
 A chromium window will open and scrape the page contents (leave this window open until it closes automatically)
