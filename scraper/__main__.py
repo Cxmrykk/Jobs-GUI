@@ -1,5 +1,3 @@
-#from selenium import webdriver
-#from selenium.webdriver.chrome.options import Options
 import undetected_chromedriver as uc
 import re
 import json
@@ -9,11 +7,6 @@ import tkinter as tk
 from tkinter import ttk
 import threading
 import webbrowser
-
-# Set up Chrome options
-#options = Options()
-#options.add_argument("--headless=new")
-#options.headless = True
 
 # Initialize an empty dictionary to store the jobs
 jobs = {}
