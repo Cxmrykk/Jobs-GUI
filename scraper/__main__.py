@@ -81,17 +81,16 @@ def fetch_jobs():
 
     # Create a new instance of the Chrome driver
     #driver = webdriver.Chrome(options=options)
-    seek_driver = uc.Chrome(headless=True,use_subprocess=True)
-    indeed_driver = uc.Chrome(headless=False,use_subprocess=True)
+    driver = uc.Chrome(headless=False, use_subprocess=False)
 
     try:
         # Fetch Seek jobs
         if seek_url:
-            fetch_seek_jobs(seek_driver, seek_url, num_pages)
+            fetch_seek_jobs(driver, seek_url, num_pages)
 
         # Fetch Indeed jobs
         if indeed_url:
-            fetch_indeed_jobs(indeed_driver, indeed_url, num_pages)
+            fetch_indeed_jobs(driver, indeed_url, num_pages)
 
         # Update the status bar
         status_var.set("Finished fetching jobs.")
@@ -102,8 +101,7 @@ def fetch_jobs():
 
     # Close the browser
     finally:
-        seek_driver.quit()
-        indeed_driver.quit()
+        driver.quit()
 
 def fetch_seek_jobs(driver, url, num_pages):
     for page in range(1, num_pages + 1):
