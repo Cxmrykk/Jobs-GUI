@@ -1,4 +1,4 @@
-import undetected_chromedriver as uc
+import nodriver as uc
 import re
 import json
 from datetime import datetime
@@ -241,7 +241,21 @@ def update_search(*args):
                 time_difference = now - listing_date
                 listed_date = f"{time_difference.days} Days Ago"
             except:
-                listed_date = job.get('pubDate')
+                try:
+                    # Try to parse the date as a timestamp (milliseconds since epoch)
+                    timestamp_ms = int(job.get('pubDate'))
+                    date_obj = datetime.fromtimestamp(timestamp_ms / 1000)  # Convert to seconds
+                    time_difference = datetime.now() - date_obj
+                    listed_date = f"{time_difference.days} Days Ago"
+                except:
+                    # If parsing fails, assume it's a date string and calculate days ago
+                    try:
+                        date_obj = datetime.strptime(job.get('pubDate'), "%a, %d %b %Y %H:%M:%S GMT")
+                        time_difference = datetime.now() - date_obj
+                        listed_date = f"{time_difference.days} Days Ago"
+                    except:
+                        # If both parsing attempts fail, display the original date string
+                        listed_date = job.get('pubDate')
 
             try:
                 source = "Seek"
@@ -249,7 +263,7 @@ def update_search(*args):
                 company = job['advertiser']['description']
             except:
                 source = "Indeed"
-                work_type = "N/A"
+                work_type = ", ".join(job.get('jobTypes', []))  # Handle missing jobTypes
                 company = job.get('company')
 
             tree.insert('', 'end', values=(job['title'], company, work_type, location, listed_date, source))
